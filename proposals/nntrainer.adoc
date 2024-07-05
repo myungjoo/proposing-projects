@@ -1,55 +1,68 @@
 == NNTrainer Project Proposal
 
 
-*Name of the project*: NNTrainer
+*Name of project*: NNTrainer
 
-*Requested maturity level*: Sandbox stage
+*Requested project maturity level*: Sandbox stage
 
-*Description*:
-NNTrainer is a software framework to train neural network models in embedded devices, which have relatively limited resources.
+*Project description*:
+
+NNTrainer is a software framework to train neural network models on embedded devices with limited computation resources.
 Usually, but not necessarily, NNTrainer trains a pre-trained model for personalization; e.g., fine-tuning a base common model with additional data of a user.
 However, it can still train a model from scratch as conventional frameworks do.
 
 
-NNTrainer promotes easier and efficient development of on-device AI training and personalization with its API sets (C/C\+\+/C\#/Web) and features targetting on-device AI personalization usage scenarios.
-For the embedded devices with limited resources, NNTrainer provides highly efficient (both memory and computation) mechanisms as described in a https://arxiv.org/abs/2206.04688[tech report].
+NNTrainer promotes easier and efficient development of on-device AI training for AI personalization with user data without the need for exposing user data out of the device.
+NNTrainer provides highly efficient (both memory and computation) mechanisms as described in https://conf.researchr.org/details/icse-2024/icse-2024-software-engineering-in-practice/5/A-New-Frontier-of-AI-On-Device-AI-Training-and-Personalization[ICSE 2024 Paper].
 NNTrainer is highly modular and extensible; thus, users can extend its functions with their own implementation, deployed as plugins.
+With the given efficent computation mechanisms, users may also run large language models with more parameters on device; e.g., running 15 GiB LLM on an 8 GiB RAM device.
 
 
 NNTrainer has started as an open source project since 2019 with Apache 2.0 license.
 NNTrainer is released for Tizen, Ubuntu, and Android and tested daily for them.
-And it is already being deployed for a few consumer electronic devices, from mobile devices to home appliances.
+It is applied to actual embedded devices: consumer eletronics including mobile phones (Samsung Galaxy S23 and later) run NNTrainer for on-device AI personalization.
+https://www.zdnet.com/article/this-new-samsung-galaxy-feature-lets-you-clone-your-own-voice-sort-of/[ZDNet: This new Samsung Galaxy feature lets you clone your own voice (sort of)] is an example of NNTrainer applications.
 
 
-NNTrainer is a spun-off project from another LF AI & Data project, https://nntrainer.ci[NNStreamer].
+NNTrainer is a spun-off project from another LF AI & Data project, https://nntrainer.ai[NNStreamer].
 
 
 More information is available at
 
  * https://github.com/nnstreamer/nntrainer[Github repo] (The main NNTrainer page)
+ * https://conf.researchr.org/details/icse-2024/icse-2024-software-engineering-in-practice/5/A-New-Frontier-of-AI-On-Device-AI-Training-and-Personalization[ICSE 2024 Conference] (2024.4.) "A New Frontier of AI: On-Device AI Training and Personalization"
  * https://arxiv.org/abs/2206.04688[Arxiv article] (2022.6.) "NNTrainer: Light-Weight On-Device Training Framework"
  * https://www.youtube.com/watch?v=HKKowY78P1[SDC 21' presentation] (2021.10.) "[Tech Talk] NNTrainer: Personalize neural networks on devices!"
  * https://www.youtube.com/watch?v=HWiV7WbIM3E&t=48s[SSDC 21' presentation] (2021.11.) (Korean)
 
 
-*Statement on alignment with LF AI’s mission:* NNTrainer allows training, fine-tuning, personalizing, or updating nerual network models in light-weight deviecs (such as mobile phones, televisions, and home appliances) with mechanisms specialized in on-device AI & AI personalization usage scenarios. NNTrainer offers such mechanisms as open source software and promotes usages and contributions of the general public.
+*Statement on alignment with LF AI’s mission:*
+
+<< WIP >>
+
+We have started building an opensource community
+
+
+NNTrainer allows training, fine-tuning, personalizing, or updating nerual network models on light-weight deviecs (such as mobile phones, televisions, and home appliances) with mechanisms specialized in on-device AI & AI personalization usage scenarios. INNTrainer offers such mechanisms as open source software and promotes usages and contributions of the general public.
 
 
 *Have you identified possible collaboration opportunities with current LF AI hosted projects (https://lfai.foundation/projects/)? Please explain.*:
 
- * Pravega (LF): we are considering Pravega as a candidate data repository for stream pipelined on-device training. Pravega is considering NNStreamer as its extension as well.
- * Sparklyr: this may be an alternative choice for the data repository.
- * ONNX: NNTrainer is going to support importing from and exporting to model file formats of other frameworks. The first candidates are .circle (One runtime) and .tflite (Tensorflow-lite). Unless .circle supports import/export with ONNX, ONNX will be the second candidate.
- * NNStreamer: NNStreamer can offer streaming capability for NNTrainer with its https://github.com/nnstreamer/nnstreamer/issues/3745[future feature]. They share the same https://github.com/nnstreamer/API[API infrastructure], which will provide remote off-loading inferences and training.
+ * ONNX: We have decided ONNX as the standard model format for the next version releases of NNTrainer. We will be highly depending on ONNX and its forward compatibility.
+ * NNStreamer: NNStreamer and its other spun-off projects (Device MLOps and ML API) provide the standard interfaces and means to execute NNTrainer in many embedded devices. NNTrainer also provides a few plugins for NNStreamer.
+ * JanusGraph: NNTrainer's new focus is on executing large language models (inferencing faster with less memory) and personalize them with given on-device user data, which will require on-device RAG and LoRA-generation. JanusGraph can be the graph database to store user data as knowledge graphs and provide RAG basis.
+ * Milvus: This may provide knowledge graph and RAG basis as JanusGraph may do.
 
 
-*License*: https://github.com/nnstreamer/nntrainer/blob/main/LICENSE[Apache 2.0]
+*License name, version, and URL to license text*
+
+Apache 2.0: https://github.com/nnstreamer/nntrainer/blob/main/LICENSE
 
 *Source control*: https://github.com/nnstreamer/nntrainer[Github]
 
 *Github organization*: sharing https://github.com/nnstreamer[NNStreamer organization] with NNStreamer project.
 
-*Github DCO*: active with its pull requests.
+*Github DCO*: Yes. It's active with pull requests.
 
 *Issue tracker*: https://github.com/nnstreamer/nntrainer/issues[Github Issues]
 
@@ -57,12 +70,12 @@ More information is available at
 
 *External dependencies*:
 
- * Mandatory Dependencies
+ * Mandatory dependencies
  ** Meson (Apache 2.0)
  ** Openblas (BSD-3)
  ** Iniparser (MIT)
 
- * Optional Dependencies
+ * Optional dependencies: users may turn them on and off at build-time.
  ** FlatBuffers (Apache 2.0)
  ** GTest (BSD-3)
  ** Python >= 3 (PSF)
@@ -74,31 +87,48 @@ More information is available at
  ** Tensorflow-lite >= 2 (Apache 2.0)
  ** NNStreamer (LGPL 2.1)
  ** GStreamer (LGPL 2.1)
+ ** ONNX (Apache 2.0)
+ ** OpenMP (various. it's an API specification)
 
 *Initial committers*:
 
- ** Jijoong Moon, jijoong.moon@samsung.com, Samsung Research, since 2019.10.
- ** Hyeonseok Lee, hs89.lee@samsung.com, Samsung Research, since 2020.4.
- ** Hyunil Park, hyunil46.park@samsung.com, Samsung Research, since 2022.3.
- ** Jiho Chu, jiho.chu@samsung.com, Samsung Research, 2022.4.
- ** Donghak Park, donghak.park@samsung.com, Samsung Research, 2022.5.
- ** Parichay Kapoor, kparichay@gmail.com, Meta (since 2022), since 2020.6.
- ** Jihoon Lee, zhoonit@gmail.com, NHN (since 2022), since 2020.4.
- ** MyungJoo Ham, myungjoo.ham@samsung.com, Samsung Research, since 2021.1.
- ** Sangjung Woo, sangjung.woo@samsung.com, Samsung Research, since 2020.5.
+<< WIP >>
 
+Frequent contributors
 
- ** Seongwoo Chae, mhs4670go@naver.com, Samsung Research, since 2022.5.
- ** Dongju Chae, dongju.chae@samsung.com, Samsung Research, since 2020.5.
+ ** Jijoong Moon, jijoong.moon@samsung.com, Samsung Research, since 2019.10. ~
+ ** Hyeonseok Lee, hs89.lee@samsung.com, Samsung Research, since 2020.4. ~
+ ** Jiho Chu, jiho.chu@samsung.com, Samsung Research, 2022.4. ~
+ ** Donghak Park, donghak.park@samsung.com, Samsung Research, 2022.5. ~
+ ** Hyungjun Seo, hyungjun.seo@samsung.com, Samsung Research, since 2022.10. ~
+ ** Eunju Yang, ej.yang@samsung.com, Samsung Research, since 2024.1. ~
+ ** Hyunil Park, hyunil46.park@samsung.com, Samsung Research, since 2022.3. ~
+ ** MyungJoo Ham, myungjoo.ham@samsung.com, Samsung Research, since 2021.1. ~
+ ** baek2sm
+ ** skykongkong8
+ ** djeong20
+ ** Debadri Samaddar, s-debadri
+
+Used-to-be frequent contributors
+
+ ** Jihoon Lee, zhoonit@gmail.com, NHN, since 2020.4. ~ 2022
+ ** Parichay Kapoor, kparichay@gmail.com, Meta, since 2020.6. ~ 2022
+
+Casual contributors
+
  ** Juyeong Lee, judy.lee@daangn.com, Danggeun Market Inc., since 2021.2.
+ ** GyeongHoe Koo, heka1024@gmail.com, Danggeun Market Inc., since 2024.3.
+ ** Dongju Chae, dongju.chae@samsung.com, Mango Boost, since 2020.5.
+ ** Sangjung Woo, sangjung.woo@samsung.com, Samsung Research, since 2020.5.
+ ** Seongwoo Chae, mhs4670go@naver.com, Samsung Research, since 2022.5.
  ** Wook Song, wook16.song@samsung.com, Samsung Research, since 2020.3.
  ** Gichan Jang, gichan2.jang@samsung.com, Samsung Research, since 2021.1.
  ** Jaeyun Jung, jy1210.jung@samsung.com, Samsung Research, since 2021.2.
  ** Mete Ozay, meteozay@gmail.com, Samsung Research UK, since 2020.11.
  ** Yongjoo Ahn, yongjoo1.ahn@samsung.com, Samsung Research, since 2020.10.
  ** Geunsik Lim, geunsik.lim@samsung.com, Samsung Research, since 2020.5.
- ** JeanSanghyun, brainer@kakao.com, Unknown, since 2020.7.
  ** Udit Jain, udit.jain@samsung.com, Samsung Research, since 2022.5.
+
 
 
 
@@ -106,13 +136,16 @@ More information is available at
 
 *Total number of contributors to the project including their affiliations.*:
 
-Counting code commits only.
+<< WIP >>
 
-* Samsung Research: 5 (highly active) 10 (casual)
-* Samsung Research UK: 1 (casual)
-* Meta UK: 1 (highly active --> casual. ex-Samsung)
-* NHN: 1 (highly active --> casual. ex-Samsung)
-* Danggeun Market Inc.: 1 (cacual)
+* Samsung Research: 
+* Samsung Research UK: 1
+* Samrung Research India:
+* Meta UK: 1 (ex-Samsung)
+* NHN: 1 (ex-Samsung)
+* Mango Boost: 1 (ex-Samsung)
+* Danggeun Market Inc.: 2
+* Student:
 * Unknown: 1
 
 *Release methodology*: https://github.com/nnstreamer/nntrainer/blob/main/RELEASE.md[RELEASES.md]
